@@ -24,146 +24,196 @@ while (running)
     Console.Clear();
 
     Console.WriteLine("\nCurrent Games:");
-    for (int i = 0; i < games.Count; i++)
+
+    IEnumerable<Game>? filteredGames = null;
+    while (filteredGames == null)
     {
-        var game = games[i];
-        Console.WriteLine($"{i + 1}. {game.Name} | {game.GameStatus} | {game.StreamType} | {game.Votes}");
+        Console.WriteLine("Filter by: 1. All, 2. Playing, 3. Completed 4. NotStarted");
+        var filterChoice = Console.ReadLine();
+
+        switch (filterChoice)
+        {
+            case "1":
+                filteredGames = games;
+                break;
+            case "2":
+                filteredGames = games.Where(g => g.GameStatus == GameStatus.Playing);
+                break;
+            case "3":
+                filteredGames = games.Where(g => g.GameStatus == GameStatus.Completed);
+                break;
+            case "4":
+                filteredGames = games.Where(g => g.GameStatus == GameStatus.NotStarted);
+                break;
+            default:
+                Console.WriteLine("Invalid filter choice. Please try again.");
+                break;
+        }
     }
 
-    Console.WriteLine("\nMenu");
-    Console.WriteLine("1. Mark a game as playing");
-    Console.WriteLine("2. Mark a game as Completed");
-    Console.WriteLine("3. Vote for a game");
-    Console.WriteLine("4. Exit");
-
-    Console.WriteLine("Choose an option: ");
-    var choice = Console.ReadLine();
-    string? input;
-
-    switch (choice)
+    int i = 1;
+    if (!filteredGames.Any())
     {
-        case "1":
-            #region Practice Phase 1 & 2
-            //Practice Phase 1
-            //Console.WriteLine("Enter the name of the game: ");
-            //var gameName = Console.ReadLine();
-
-            //foreach(var game in games)
-            //{
-            //    if (game.Name.Equals(gameName, StringComparison.OrdinalIgnoreCase))
-            //    {
-            //        game.GameStatus = GameStatus.Playing;
-            //        Console.WriteLine($"{game.Name} is now marked as playing.");
-            //    }
-            //}
-
-            ////Practice Phase 2
-            //Console.WriteLine("Enter the number of the game: ");
-            //input = Console.ReadLine();
-
-            //if (int.TryParse(input, out int gameNumber))
-            //{
-            //    if (gameNumber >= 1 && gameNumber <= games.Count)
-            //    {
-            //        var selectedGame = games[gameNumber - 1];
-            //        selectedGame.GameStatus = GameStatus.Playing;
-            //        Console.WriteLine($"{selectedGame.Name} is now marked as Playing.");
-            //        Pause();
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("Invalid number. Please try again.");
-            //        Pause();
-            //    }
-            //}
-            #endregion
-            MarkGameAsPlaying(games);
-            break;
-
-        case "2":
-            #region Practice Phase 1 & 2
-            //Practice Phase 1
-            //Console.Write("Enter the name of the game: ");
-            //gameName = Console.ReadLine();
-
-            //foreach (var game in games)
-            //{
-            //    if (game.Name.Equals(gameName, StringComparison.OrdinalIgnoreCase))
-            //    {
-            //        game.GameStatus = GameStatus.Completed;
-            //        Console.WriteLine($"{game.Name} is now marked as completed.");
-            //    }
-            //}
-
-            ////Practice Phase 2
-            //Console.WriteLine("Enter the number of the game: ");
-            //input = Console.ReadLine();
-            //if (int.TryParse(input, out gameNumber))
-            //{
-            //    if (gameNumber >= 1 && gameNumber <= games.Count)
-            //    {
-            //        var selectedGame = games[gameNumber - 1];
-
-            //        selectedGame.GameStatus = GameStatus.Completed;
-            //        Console.WriteLine($"{selectedGame.Name} is now marked as Completed.");
-            //        Pause();
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("Invalid number. Please try again.");
-            //        Pause();
-            //    }
-            //}
-            #endregion
-            MarkGameAsCompleted(games);
-            break;
-
-        case "3":
-            #region Practice Phase 1 & 2
-            ////Practice Phase 2
-            //Console.WriteLine("Enter the number of the game you want to vote for: ");
-            //input = Console.ReadLine();
-
-            //if (int.TryParse(input, out gameNumber))
-            //{
-            //    if (gameNumber >= 1 && gameNumber <= games.Count)
-            //    {
-            //        var selectedGame = games[gameNumber - 1];
-            //        selectedGame.Votes++;
-            //        Console.WriteLine($"You voted for {selectedGame.Name}. Total votes: {selectedGame.Votes}");
-            //        Pause();
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("Invalid Number");
-            //        Pause();
-            //    }
-            //}
-            //else
-            //{
-            //    Console.WriteLine("Please enter a valid number.");
-            //    Pause();
-            //}
-            #endregion
-            VoteForGame(games);
-            break;
-
-        case "4":
-            running = false;
-            break;
-
-        default:
-            Console.WriteLine("Invalid Option. Please try again");
-            Pause();
-            break;
+        Console.WriteLine("No games found with the selected filter.");
     }
-}
+    else
+    {
+        foreach (var game in filteredGames)
+        {
+            if (game.GameStatus == GameStatus.Playing)
+                Console.ForegroundColor = ConsoleColor.Green;
 
-Console.WriteLine("\nCurrent Games:");
+            else if (game.GameStatus == GameStatus.Completed)
+                Console.ForegroundColor = ConsoleColor.Blue;
 
-foreach (var game in games)
-{
-    Console.WriteLine($"{game.Name} | {game.GameStatus} | {game.StreamType} | {game.Votes}");
+            else Console.ForegroundColor = ConsoleColor.Red;
+
+            Console.WriteLine($"{i}. {game.Name} | {game.GameStatus} | {game.StreamType} | {game.Votes}");
+            Console.ResetColor();
+            i++;
+        }
+    }
+
+    if (filteredGames.Any())
+    {
+
+        Console.WriteLine("\nActions Menu");
+        Console.WriteLine("1. Mark a game as playing");
+        Console.WriteLine("2. Mark a game as Completed");
+        Console.WriteLine("3. Vote for a game");
+        Console.WriteLine("4. Return");
+        Console.WriteLine("5. Exit");
+
+        Console.WriteLine("Choose an option: ");
+        var choice = Console.ReadLine();
+
+        switch (choice)
+        {
+            case "1":
+                #region Practice Phase 1 & 2
+                //Practice Phase 1
+                //Console.WriteLine("Enter the name of the game: ");
+                //var gameName = Console.ReadLine();
+
+                //foreach(var game in games)
+                //{
+                //    if (game.Name.Equals(gameName, StringComparison.OrdinalIgnoreCase))
+                //    {
+                //        game.GameStatus = GameStatus.Playing;
+                //        Console.WriteLine($"{game.Name} is now marked as playing.");
+                //    }
+                //}
+
+                ////Practice Phase 2
+                //Console.WriteLine("Enter the number of the game: ");
+                //input = Console.ReadLine();
+
+                //if (int.TryParse(input, out int gameNumber))
+                //{
+                //    if (gameNumber >= 1 && gameNumber <= games.Count)
+                //    {
+                //        var selectedGame = games[gameNumber - 1];
+                //        selectedGame.GameStatus = GameStatus.Playing;
+                //        Console.WriteLine($"{selectedGame.Name} is now marked as Playing.");
+                //        Pause();
+                //    }
+                //    else
+                //    {
+                //        Console.WriteLine("Invalid number. Please try again.");
+                //        Pause();
+                //    }
+                //}
+                #endregion
+                MarkGameAsPlaying(games);
+                break;
+
+            case "2":
+                #region Practice Phase 1 & 2
+                //Practice Phase 1
+                //Console.Write("Enter the name of the game: ");
+                //gameName = Console.ReadLine();
+
+                //foreach (var game in games)
+                //{
+                //    if (game.Name.Equals(gameName, StringComparison.OrdinalIgnoreCase))
+                //    {
+                //        game.GameStatus = GameStatus.Completed;
+                //        Console.WriteLine($"{game.Name} is now marked as completed.");
+                //    }
+                //}
+
+                ////Practice Phase 2
+                //Console.WriteLine("Enter the number of the game: ");
+                //input = Console.ReadLine();
+                //if (int.TryParse(input, out gameNumber))
+                //{
+                //    if (gameNumber >= 1 && gameNumber <= games.Count)
+                //    {
+                //        var selectedGame = games[gameNumber - 1];
+
+                //        selectedGame.GameStatus = GameStatus.Completed;
+                //        Console.WriteLine($"{selectedGame.Name} is now marked as Completed.");
+                //        Pause();
+                //    }
+                //    else
+                //    {
+                //        Console.WriteLine("Invalid number. Please try again.");
+                //        Pause();
+                //    }
+                //}
+                #endregion
+                MarkGameAsCompleted(games);
+                break;
+
+            case "3":
+                #region Practice Phase 1 & 2
+                ////Practice Phase 2
+                //Console.WriteLine("Enter the number of the game you want to vote for: ");
+                //input = Console.ReadLine();
+
+                //if (int.TryParse(input, out gameNumber))
+                //{
+                //    if (gameNumber >= 1 && gameNumber <= games.Count)
+                //    {
+                //        var selectedGame = games[gameNumber - 1];
+                //        selectedGame.Votes++;
+                //        Console.WriteLine($"You voted for {selectedGame.Name}. Total votes: {selectedGame.Votes}");
+                //        Pause();
+                //    }
+                //    else
+                //    {
+                //        Console.WriteLine("Invalid Number");
+                //        Pause();
+                //    }
+                //}
+                //else
+                //{
+                //    Console.WriteLine("Please enter a valid number.");
+                //    Pause();
+                //}
+                #endregion
+                VoteForGame(games);
+                break;
+
+            case "4":
+                continue;
+
+            case "5":
+                running = false;
+                break;
+
+            default:
+                Console.WriteLine("Invalid Option. Please try again");
+                Pause();
+                break;
+        }
+    }
+    else
+    {
+        Console.WriteLine("\nPress any key to return to the filter Menu");
+        Console.ReadKey();
+        continue;
+    }
 }
 
 Console.WriteLine("\nPress any key to exit...");
@@ -254,4 +304,3 @@ void VoteForGame(List<Game> games)
         Pause();
     }
 }
-
