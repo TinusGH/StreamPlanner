@@ -1,6 +1,6 @@
 ﻿namespace StreamPlanner.Shared
 {
-    internal enum GameStatus
+    public enum GameStatus
     {
         NotStarted = 0,
         Playing = 1,

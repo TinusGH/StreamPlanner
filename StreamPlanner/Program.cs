@@ -1,4 +1,5 @@
 ﻿using StreamPlanner;
+using StreamPlanner.Services;
 using StreamPlanner.Shared;
 
 var games = new List<Game>()
@@ -9,6 +10,9 @@ var games = new List<Game>()
     new Game() { Name = "Clair Obscur: Expedition 33", GameStatus = GameStatus.Playing, StreamType = StreamType.letsPlay },
     new Game() { Name = "Palworld", GameStatus = GameStatus.Playing, StreamType = StreamType.chillStream },
 };
+
+// Dependency Injection of the game list into the GameService
+IGameService gameService = new GameService(games);
 
 Console.WriteLine("Welcome to the Stream Planner! \nThese are the current games:\n");
 
@@ -31,24 +35,43 @@ while (running)
         Console.WriteLine("Filter by: 1. All, 2. Playing, 3. Completed 4. NotStarted");
         var filterChoice = Console.ReadLine();
 
+        #region Practice Phase 3
+        //switch (filterChoice)
+        //{
+        //    case "1":
+        //        filteredGames = games;
+        //        break;
+        //    case "2":
+        //        filteredGames = games.Where(g => g.GameStatus == GameStatus.Playing);
+        //        break;
+        //    case "3":
+        //        filteredGames = games.Where(g => g.GameStatus == GameStatus.Completed);
+        //        break;
+        //    case "4":
+        //        filteredGames = games.Where(g => g.GameStatus == GameStatus.NotStarted);
+        //        break;
+        //    default:
+        //        Console.WriteLine("Invalid filter choice. Please try again.");
+        //        break;
+        //}
+        #endregion
+
         switch (filterChoice)
         {
             case "1":
-                filteredGames = games;
+                filteredGames = gameService.GetAllGames();
                 break;
             case "2":
-                filteredGames = games.Where(g => g.GameStatus == GameStatus.Playing);
+                filteredGames = gameService.GetGamesByStatus(GameStatus.Playing);
                 break;
             case "3":
-                filteredGames = games.Where(g => g.GameStatus == GameStatus.Completed);
+                filteredGames = gameService.GetGamesByStatus(GameStatus.Completed);
                 break;
             case "4":
-                filteredGames = games.Where(g => g.GameStatus == GameStatus.NotStarted);
-                break;
-            default:
-                Console.WriteLine("Invalid filter choice. Please try again.");
+                filteredGames = gameService.GetGamesByStatus(GameStatus.NotStarted);
                 break;
         }
+
     }
 
     int i = 1;
@@ -233,24 +256,35 @@ void MarkGameAsPlaying(List<Game> games)
 
     if (int.TryParse(input, out int gameNumber))
     {
-        if (gameNumber >= 1 && gameNumber <= games.Count)
+        #region practice phase 3
+        //if (gameNumber >= 1 && gameNumber <= games.Count)
+        //{
+        //    var selectedGame = games[gameNumber - 1];
+        //    selectedGame.GameStatus = GameStatus.Playing;
+        //    Console.WriteLine($"{selectedGame.Name} is now marked as Playing.");
+        //    Pause();
+        //}
+        //else
+        //{
+        //    Console.WriteLine("Invalid number. Please try again.");
+        //    Pause();
+        //}
+        #endregion
+        try
         {
-            var selectedGame = games[gameNumber - 1];
-            selectedGame.GameStatus = GameStatus.Playing;
-            Console.WriteLine($"{selectedGame.Name} is now marked as Playing.");
-            Pause();
+            var updatedGame = gameService.MarkAsPlaying(gameNumber - 1);
+            Console.WriteLine($"{updatedGame.Name} is now marked as Playing.");
         }
-        else
+        catch (ArgumentOutOfRangeException)
         {
             Console.WriteLine("Invalid number. Please try again.");
-            Pause();
         }
     }
     else
     {
         Console.WriteLine("Please enter a valid number.");
-        Pause();
     }
+    Pause();
 }
 
 void MarkGameAsCompleted(List<Game> games)
@@ -259,24 +293,35 @@ void MarkGameAsCompleted(List<Game> games)
     var input = Console.ReadLine();
     if (int.TryParse(input, out int gameNumber))
     {
-        if (gameNumber >= 1 && gameNumber <= games.Count)
+        #region practice phase 3
+        //if (gameNumber >= 1 && gameNumber <= games.Count)
+        //{
+        //    var selectedGame = games[gameNumber - 1];
+        //    selectedGame.GameStatus = GameStatus.Completed;
+        //    Console.WriteLine($"{selectedGame.Name} is now marked as Completed.");
+        //    Pause();
+        //}
+        //else
+        //{
+        //    Console.WriteLine("Invalid number. Please try again.");
+        //    Pause();
+        //}
+        #endregion
+        try
         {
-            var selectedGame = games[gameNumber - 1];
-            selectedGame.GameStatus = GameStatus.Completed;
-            Console.WriteLine($"{selectedGame.Name} is now marked as Completed.");
-            Pause();
+            var updatedGame = gameService.MarkAsCompleted(gameNumber - 1);
+            Console.WriteLine($"{updatedGame.Name} is now marked as Completed.");
         }
-        else
+        catch (ArgumentOutOfRangeException)
         {
             Console.WriteLine("Invalid number. Please try again.");
-            Pause();
         }
     }
     else
     {
         Console.WriteLine("Please enter a valid number.");
-        Pause();
     }
+    Pause();
 }
 
 void VoteForGame(List<Game> games)
@@ -285,22 +330,33 @@ void VoteForGame(List<Game> games)
     var input = Console.ReadLine();
     if (int.TryParse(input, out int gameNumber))
     {
-        if (gameNumber >= 1 && gameNumber <= games.Count)
+        #region prectice phase 3
+        //if (gameNumber >= 1 && gameNumber <= games.Count)
+        //{
+        //    var selectedGame = games[gameNumber - 1];
+        //    selectedGame.Votes++;
+        //    Console.WriteLine($"You voted for {selectedGame.Name}. Total votes: {selectedGame.Votes}");
+        //    Pause();
+        //}
+        //else
+        //{
+        //    Console.WriteLine("Invalid Number");
+        //    Pause();
+        //}
+        #endregion
+        try
         {
-            var selectedGame = games[gameNumber - 1];
-            selectedGame.Votes++;
-            Console.WriteLine($"You voted for {selectedGame.Name}. Total votes: {selectedGame.Votes}");
-            Pause();
+            var updatedGame = gameService.Vote(gameNumber - 1);
+            Console.WriteLine($"Your vote has been added for {updatedGame.Name}.");
         }
-        else
+        catch (ArgumentOutOfRangeException)
         {
-            Console.WriteLine("Invalid Number");
-            Pause();
+            Console.WriteLine("Invalid number. Please try again.");
         }
     }
     else
     {
         Console.WriteLine("Please enter a valid number.");
-        Pause();
     }
+    Pause();
 }

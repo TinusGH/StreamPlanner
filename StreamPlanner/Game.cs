@@ -1,7 +1,7 @@
 ﻿using StreamPlanner.Shared;
 namespace StreamPlanner
 {
-    internal class Game
+    public class Game
     {
         public required string Name { get; set; }
         public GameStatus GameStatus { get; set; } = GameStatus.NotStarted;

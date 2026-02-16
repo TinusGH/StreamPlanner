@@ -1,6 +1,6 @@
 ﻿namespace StreamPlanner.Shared
 {
-    internal enum StreamType
+    public enum StreamType
     {
         justChatting = 0,
         chillStream = 1,
