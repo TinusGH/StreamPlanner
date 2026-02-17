@@ -1,5 +1,5 @@
 ﻿using StreamPlanner.Shared;
-namespace StreamPlanner
+namespace StreamPlanner.Models
 {
     public class Game
     {

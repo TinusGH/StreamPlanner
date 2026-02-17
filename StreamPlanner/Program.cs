@@ -1,22 +1,28 @@
-﻿using StreamPlanner;
+﻿using StreamPlanner.Models;
+using StreamPlanner.Repositories;
 using StreamPlanner.Services;
 using StreamPlanner.Shared;
 
-var games = new List<Game>()
-{
-    new Game() { Name = "Final Fantasy VII - Remake Intergrade", GameStatus = GameStatus.Playing, StreamType = StreamType.letsPlay },
-    new Game() { Name = "Final Fantasy VII - Remake Intergrade: Episode INTERmission", GameStatus = GameStatus.NotStarted, StreamType = StreamType.letsPlay },
-    new Game() { Name = "Final Fantasy VII - Rebirth", GameStatus = GameStatus.NotStarted, StreamType = StreamType.letsPlay },
-    new Game() { Name = "Clair Obscur: Expedition 33", GameStatus = GameStatus.Playing, StreamType = StreamType.letsPlay },
-    new Game() { Name = "Palworld", GameStatus = GameStatus.Playing, StreamType = StreamType.chillStream },
-};
+#region practice phase 4
+//var games = new List<Game>()
+//{
+//    new Game() { Name = "Final Fantasy VII - Remake Intergrade", GameStatus = GameStatus.Playing, StreamType = StreamType.letsPlay },
+//    new Game() { Name = "Final Fantasy VII - Remake Intergrade: Episode INTERmission", GameStatus = GameStatus.NotStarted, StreamType = StreamType.letsPlay },
+//    new Game() { Name = "Final Fantasy VII - Rebirth", GameStatus = GameStatus.NotStarted, StreamType = StreamType.letsPlay },
+//    new Game() { Name = "Clair Obscur: Expedition 33", GameStatus = GameStatus.Playing, StreamType = StreamType.letsPlay },
+//    new Game() { Name = "Palworld", GameStatus = GameStatus.Playing, StreamType = StreamType.chillStream },
+//};
 
 // Dependency Injection of the game list into the GameService
-IGameService gameService = new GameService(games);
+
+//IGameService gameService = new GameService(games);
+#endregion
+IGameRepository repository = new InMemoryGameRepository();
+IGameService gameService = new GameService(repository);
 
 Console.WriteLine("Welcome to the Stream Planner! \nThese are the current games:\n");
 
-foreach (var game in games)
+foreach (var game in gameService.GetAllGames())
 {
     Console.WriteLine($"{game.Name} | {game.GameStatus} | {game.StreamType} | {game.Votes}");
 }
@@ -147,7 +153,7 @@ while (running)
                 //    }
                 //}
                 #endregion
-                MarkGameAsPlaying(games);
+                MarkGameAsPlaying();
                 break;
 
             case "2":
@@ -185,7 +191,7 @@ while (running)
                 //    }
                 //}
                 #endregion
-                MarkGameAsCompleted(games);
+                MarkGameAsCompleted();
                 break;
 
             case "3":
@@ -215,7 +221,7 @@ while (running)
                 //    Pause();
                 //}
                 #endregion
-                VoteForGame(games);
+                VoteForGame();
                 break;
 
             case "4":
@@ -249,7 +255,7 @@ void Pause()
     Console.ReadKey();
 }
 
-void MarkGameAsPlaying(List<Game> games)
+void MarkGameAsPlaying()
 {
     Console.WriteLine("Enter the number of the game: ");
     var input = Console.ReadLine();
@@ -287,7 +293,7 @@ void MarkGameAsPlaying(List<Game> games)
     Pause();
 }
 
-void MarkGameAsCompleted(List<Game> games)
+void MarkGameAsCompleted()
 {
     Console.WriteLine("Enter the number of the game: ");
     var input = Console.ReadLine();
@@ -324,7 +330,7 @@ void MarkGameAsCompleted(List<Game> games)
     Pause();
 }
 
-void VoteForGame(List<Game> games)
+void VoteForGame()
 {
     Console.WriteLine("Enter the number of the game you want to vote for: ");
     var input = Console.ReadLine();

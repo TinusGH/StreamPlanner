@@ -1,4 +1,5 @@
-﻿using StreamPlanner.Shared;
+﻿using StreamPlanner.Models;
+using StreamPlanner.Shared;
 
 namespace StreamPlanner.Services
 {
